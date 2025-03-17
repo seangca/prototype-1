@@ -10,6 +10,43 @@ tailwind.config = {
     }
 };
 
+// Hamburger Menu
+const hamburger = document.querySelector('.hamburger');
+const mobileMenu = document.querySelector('.mobile-menu');
+const menuIcon = hamburger.querySelector('i');
+const menuItems = document.querySelectorAll('.menu-item');
+
+hamburger.addEventListener('click', () => {
+    mobileMenu.classList.toggle('active');
+    menuIcon.classList.toggle('fa-bars');
+    menuIcon.classList.toggle('fa-times');
+    
+    // Animate menu items
+    menuItems.forEach((item, index) => {
+        if (mobileMenu.classList.contains('active')) {
+            setTimeout(() => {
+                item.classList.remove('opacity-0', 'translate-y-4');
+            }, 100 * (index + 1));
+        } else {
+            item.classList.add('opacity-0', 'translate-y-4');
+        }
+    });
+});
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', (e) => {
+    if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target) && mobileMenu.classList.contains('active')) {
+        mobileMenu.classList.remove('active');
+        menuIcon.classList.add('fa-bars');
+        menuIcon.classList.remove('fa-times');
+        
+        // Reset menu items
+        menuItems.forEach(item => {
+            item.classList.add('opacity-0', 'translate-y-4');
+        });
+    }
+});
+
 // Prevent default scroll restoration
 if (history.scrollRestoration) {
     history.scrollRestoration = 'manual';

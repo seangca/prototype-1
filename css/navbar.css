@@ -1,0 +1,25 @@
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 49;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-100%);
+    transition: opacity 0.3s ease, transform 0.4s ease, visibility 0.3s ease;
+}
+.mobile-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+@media (min-width: 768px) {
+    .hamburger { display: none; }
+}
+@media (max-width: 767px) {
+    .nav-links { display: none; }
+    .hamburger { display: block; }
+}
