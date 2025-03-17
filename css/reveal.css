@@ -3,7 +3,7 @@
     display: inline-block;
     position: relative;
     overflow: hidden;
-    transition: 1.5s;
+    transition: 1.2s;
     opacity: 0;
     will-change: transform, opacity;
     transform: translateZ(0);
@@ -11,7 +11,7 @@
 
 .text-reveal.reveal {
     color: #fff;
-    animation: revealTextAnimation 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: revealTextAnimation 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     opacity: 1;
 }
 
@@ -25,7 +25,7 @@
 
 .text-reveal.reveal:before {
     background: #ca8a04;
-    animation: blockRevealAnimation 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: blockRevealAnimation 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes blockRevealAnimation {
@@ -62,5 +62,3 @@
 .text-yellow-300.text-reveal.reveal {
     color: #fcd34d;
 }
-
-
