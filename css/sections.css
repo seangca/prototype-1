@@ -43,28 +43,9 @@
     opacity: 1;
 }
 
-/* Landscape mode adjustments */
 @media screen and (orientation: landscape) and (max-height: 600px) {
-    .scroll-indicator {
-        bottom: 1rem; /* Reduce bottom spacing */
-    }
-    
+    .scroll-indicator,
     .bounce-arrows {
-        bottom: 2.5rem; /* Position arrows higher */
-    }
-    
-    /* Adjust title section spacing */
-    #title-section {
-        padding-bottom: 4rem; /* Reduce bottom padding */
-        min-height: 100vh; /* Ensure full height */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-    
-    /* Adjust text positioning if needed */
-    #title-section h1,
-    #title-section .subtitle {
-        margin-bottom: 0.5rem; /* Reduce spacing between text elements */
+        display: none;
     }
 }
