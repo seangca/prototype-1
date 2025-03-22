@@ -69,14 +69,14 @@ html {
 
 .bounce-arrow {
     opacity: 0;
-    animation: arrowFadeIn 1.2s ease-out 3.8s forwards, bounce 1.5s ease-in-out 4.5s infinite;
+    animation: arrowFadeIn 1.2s ease-out 4s forwards, bounce 1.5s ease-in-out 4.5s infinite;
     will-change: transform;
     transform: translateZ(0);
 }
 
 .bounce-text {
     opacity: 0;
-    animation: arrowFadeIn 1.2s ease-out 3.8s forwards, textBounce 1.5s ease-in-out 4.5s infinite;
+    animation: arrowFadeIn 1.2s ease-out 4s forwards, textBounce 1.5s ease-in-out 4.5s infinite;
     will-change: transform;
     transform: translateZ(0);
 }
