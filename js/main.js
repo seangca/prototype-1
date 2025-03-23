@@ -10,17 +10,6 @@ tailwind.config = {
     }
 };
 
-// Andriod Screen Adjustments
-
-function updateVH() {
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-}
-
-window.addEventListener('resize', updateVH);
-window.addEventListener('orientationchange', updateVH);
-updateVH();
-
 // Hamburger Menu
 const hamburger = document.querySelector('.hamburger');
 const mobileMenu = document.querySelector('.mobile-menu');
