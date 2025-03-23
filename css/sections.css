@@ -42,15 +42,3 @@
 .carousel img.opacity-100 {
     opacity: 1;
 }
-
-@media screen and (max-width: 768px) {
-    header {
-        height: 100vh !important;
-        min-height: -webkit-fill-available; 
-        }
-
-    header .carousel {
-        height: 100vh;
-        min-height: -webkit-fill-available;
-    }
-}

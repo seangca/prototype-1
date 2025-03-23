@@ -10,6 +10,17 @@ tailwind.config = {
     }
 };
 
+// Andriod Screen Adjustments
+
+function updateVH() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+window.addEventListener('resize', updateVH);
+window.addEventListener('orientationchange', updateVH);
+updateVH();
+
 // Hamburger Menu
 const hamburger = document.querySelector('.hamburger');
 const mobileMenu = document.querySelector('.mobile-menu');
@@ -20,7 +31,7 @@ hamburger.addEventListener('click', () => {
     mobileMenu.classList.toggle('active');
     menuIcon.classList.toggle('fa-bars');
     menuIcon.classList.toggle('fa-times');
-    
+
     // Animate menu items
     menuItems.forEach((item, index) => {
         if (mobileMenu.classList.contains('active')) {
@@ -39,7 +50,7 @@ document.addEventListener('click', (e) => {
         mobileMenu.classList.remove('active');
         menuIcon.classList.add('fa-bars');
         menuIcon.classList.remove('fa-times');
-        
+
         // Reset menu items
         menuItems.forEach(item => {
             item.classList.add('opacity-0', 'translate-y-4');
@@ -53,7 +64,7 @@ if (history.scrollRestoration) {
 }
 
 // Carousel functionality
-window.onload = function() {
+window.onload = function () {
     const images = document.querySelectorAll('.carousel img');
     let currentIndex = 0;
 
@@ -64,7 +75,7 @@ window.onload = function() {
         images[currentIndex].classList.remove('opacity-0');
         images[currentIndex].classList.add('opacity-100');
     }
-    
+
     if (images.length > 0) {
         images[0].classList.add('opacity-100');
         setInterval(showNextImage, 5000);
@@ -78,7 +89,7 @@ window.onload = function() {
 };
 
 // Intersection Observer for reveal animations
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -92,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
         });
-    }, { 
+    }, {
         threshold: 0.1,
         rootMargin: '0px 0px -10% 0px',
         trackVisibility: true,
