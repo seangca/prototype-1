@@ -17,13 +17,20 @@ document.addEventListener('DOMContentLoaded', function() {
         successMessage.classList.add('hidden');
         errorMessage.classList.add('hidden');
 
+        // Get current time
+        const now = new Date();
+        const timeString = now.toLocaleString();
+
         // Prepare the email parameters
         const templateParams = {
-            from_name: `${form.firstName.value} ${form.lastName.value}`,
-            from_email: form.email.value,
-            phone: form.phone.value || 'Not provided',
-            subject: form.subject.value,
-            message: form.message.value
+            name: `${form.firstName.value} ${form.lastName.value}`,
+            time: timeString,
+            message: `Subject: ${form.subject.value}
+Email: ${form.email.value}
+Phone: ${form.phone.value || 'Not provided'}
+
+Message:
+${form.message.value}`
         };
 
         // Send the email using EmailJS
