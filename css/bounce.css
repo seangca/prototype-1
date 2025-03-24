@@ -28,7 +28,7 @@
 .bounce-arrow {
     animation: clipReveal 1s cubic-bezier(0.4, 0, 0.2, 1) forwards,
                bounce 1.5s ease-in-out infinite;
-    animation-delay: 4s, 4s;
+    animation-delay: 3.5s, 3.5s;
     will-change: transform;
     transform: translateZ(0);
     clip-path: inset(0 0 100% 0);
@@ -37,7 +37,7 @@
 .bounce-text {
     animation: clipReveal 1s cubic-bezier(0.4, 0, 0.2, 1) forwards,
                textBounce 1.5s ease-in-out infinite;
-    animation-delay: 4s, 4s;
+    animation-delay: 3.5s, 3.5s;
     will-change: transform;
     transform: translateZ(0);
     clip-path: inset(0 0 100% 0);
