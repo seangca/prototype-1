@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     setTimeout(() => {
-        document.querySelectorAll('.text-reveal, section > div').forEach(element => {
+        document.querySelectorAll('.text-reveal, section > div, .map-container').forEach(element => {
             if (!element.classList.contains('reveal')) {
                 observer.observe(element);
             }

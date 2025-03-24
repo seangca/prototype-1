@@ -1,0 +1,50 @@
+.map-container {
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    will-change: opacity;
+}
+
+.map-container.reveal {
+    animation: mapFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.map-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #ca8a04;
+    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    z-index: 1;
+}
+
+.map-container.reveal::before {
+    animation: mapReveal 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes mapReveal {
+    0% {
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    }
+    40% {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+    60% {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+    100% {
+        clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    }
+}
+
+@keyframes mapFadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
