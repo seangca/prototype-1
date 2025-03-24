@@ -16,24 +16,6 @@ html {
     }
 }
 
-@keyframes bounce {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(6px);
-    }
-}
-
-@keyframes textBounce {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(3px);
-    }
-}
-
 @keyframes navSlideDown {
     0% {
         transform: translateY(-100%);
@@ -65,20 +47,6 @@ html {
     transform-origin: right;
     animation: horizontalOpen 1.5s cubic-bezier(0.77, 0, 0.175, 1) forwards;
     will-change: transform;
-}
-
-.bounce-arrow {
-    opacity: 0;
-    animation: arrowFadeIn 1.2s ease-out 4s forwards, bounce 1.5s ease-in-out 4.5s infinite;
-    will-change: transform;
-    transform: translateZ(0);
-}
-
-.bounce-text {
-    opacity: 0;
-    animation: arrowFadeIn 1.2s ease-out 4s forwards, textBounce 1.5s ease-in-out 4.5s infinite;
-    will-change: transform;
-    transform: translateZ(0);
 }
 
 .nav-reveal {

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/bounce.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,6 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
 
 <body class="bg-black font-syne">
@@ -70,18 +72,13 @@
                     </div>
                 </div>
             </div>
-            <div class="absolute bottom-[10%] md:bottom-10 w-full text-center z-10 overflow-visible">
-                <div class="text-yellow-300 flex flex-col items-center text-reveal">
-                    <p class="text-[10px] sm:text-sm font-orbitron tracking-widest mb-1 sm:mb-2 bounce-text">
-                        SCROLL DOWN
+            <div class="absolute bottom-[10%] md:bottom-10 w-full text-center z-10">
+                <div class="text-yellow-300 flex flex-col items-center">
+                    <p class="text-[10px] sm:text-sm font-orbitron tracking-widest mb-3 bounce-text uppercase">
+                        Scroll Down
                     </p>
-                    <div class="flex flex-col items-center gap-1 relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-8 sm:w-8 p-1 bounce-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-8 sm:w-8 p-1 bounce-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
+                    <div class="flex flex-col items-center gap-1">
+                        <i class="ri-arrow-down-line text-2xl sm:text-3xl bounce-arrow"></i>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,51 @@
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(4px);
+    }
+}
+
+@keyframes textBounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(2px);
+    }
+}
+
+@keyframes clipReveal {
+    0% {
+        clip-path: inset(0 0 100% 0);
+    }
+    100% {
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+.bounce-arrow {
+    animation: clipReveal 1s cubic-bezier(0.4, 0, 0.2, 1) forwards,
+               bounce 1.5s ease-in-out infinite;
+    animation-delay: 4s, 4s;
+    will-change: transform;
+    transform: translateZ(0);
+    clip-path: inset(0 0 100% 0);
+}
+
+.bounce-text {
+    animation: clipReveal 1s cubic-bezier(0.4, 0, 0.2, 1) forwards,
+               textBounce 1.5s ease-in-out infinite;
+    animation-delay: 4s, 4s;
+    will-change: transform;
+    transform: translateZ(0);
+    clip-path: inset(0 0 100% 0);
+}
+
+@media screen and (orientation: landscape) and (max-height: 600px) {
+    .bounce-arrow,
+    .bounce-text {
+        display: none;
+    }
+}
