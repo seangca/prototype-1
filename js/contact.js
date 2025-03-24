@@ -19,15 +19,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Prepare the email parameters
         const templateParams = {
+            to_name: "RUNMAR VISUALS",
             from_name: `${form.firstName.value} ${form.lastName.value}`,
-            from_email: form.email.value,
-            phone: form.phone.value || 'Not provided',
+            reply_to: form.email.value,
+            phone_number: form.phone.value || 'Not provided',
             subject: form.subject.value,
             message: form.message.value
         };
 
         // Send the email using EmailJS
-        emailjs.send('service_i2xlttc', 'template_6tfug9x', templateParams)
+        emailjs.send('service_5sb36rn', 'template_6tfug9x', templateParams)
             .then(function() {
                 // Show success message
                 successMessage.classList.remove('hidden');
