@@ -19,10 +19,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Prepare the email parameters
         const templateParams = {
-            to_name: "RUNMAR VISUALS",
             from_name: `${form.firstName.value} ${form.lastName.value}`,
-            reply_to: form.email.value,
-            phone_number: form.phone.value || 'Not provided',
+            from_email: form.email.value,
+            phone: form.phone.value || 'Not provided',
             subject: form.subject.value,
             message: form.message.value
         };
