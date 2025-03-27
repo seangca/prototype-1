@@ -3,7 +3,7 @@ tailwind.config = {
     theme: {
         extend: {
             fontFamily: {
-                'orbitron': ['Orbitron', 'sans-serif'],
+                'protest-revolution': ['Protest Revolution', 'sans-serif'],
                 'syne': ['Syne', 'sans-serif'],
             },
         }
