@@ -11,72 +11,65 @@ tailwind.config = {
 };
 
 // Hamburger Menu
-const hamburger = document.querySelector('.hamburger');
-const mobileMenu = document.querySelector('.mobile-menu');
-const menuIcon = hamburger.querySelector('i');
-const menuItems = document.querySelectorAll('.menu-item');
+const $hamburger = $('.hamburger');
+const $mobileMenu = $('.mobile-menu');
+const $menuIcon = $hamburger.find('i');
+const $menuItems = $('.menu-item');
 
-hamburger.addEventListener('click', () => {
-    mobileMenu.classList.toggle('active');
-    menuIcon.classList.toggle('fa-bars');
-    menuIcon.classList.toggle('fa-times');
+$hamburger.on('click', () => {
+    $mobileMenu.toggleClass('active');
+    $menuIcon.toggleClass('fa-bars fa-times');
 
-    menuItems.forEach((item, index) => {
-        if (mobileMenu.classList.contains('active')) {
+    $menuItems.each((index, item) => {
+        if ($mobileMenu.hasClass('active')) {
             setTimeout(() => {
-                item.classList.remove('opacity-0', 'translate-y-4');
+                $(item).removeClass('opacity-0 translate-y-4');
             }, 100 * (index + 1));
         } else {
-            item.classList.add('opacity-0', 'translate-y-4');
+            $(item).addClass('opacity-0 translate-y-4');
         }
     });
 });
 
 // Close mobile menu when clicking outside
-document.addEventListener('click', (e) => {
-    if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target) && mobileMenu.classList.contains('active')) {
-        mobileMenu.classList.remove('active');
-        menuIcon.classList.add('fa-bars');
-        menuIcon.classList.remove('fa-times');
-        menuItems.forEach(item => {
-            item.classList.add('opacity-0', 'translate-y-4');
-        });
+$(document).on('click', (e) => {
+    if (!$hamburger[0].contains(e.target) && !$mobileMenu[0].contains(e.target) && $mobileMenu.hasClass('active')) {
+        $mobileMenu.removeClass('active');
+        $menuIcon.addClass('fa-bars').removeClass('fa-times');
+        $menuItems.addClass('opacity-0 translate-y-4');
     }
 });
 
 // Carousel functionality
-window.onload = function () {
-    const images = document.querySelectorAll('.carousel img');
+$(window).on('load', function () {
+    const $images = $('.carousel img');
     let currentIndex = 0;
 
     function showNextImage() {
-        images[currentIndex].classList.remove('opacity-100');
-        images[currentIndex].classList.add('opacity-0');
-        currentIndex = (currentIndex + 1) % images.length;
-        images[currentIndex].classList.remove('opacity-0');
-        images[currentIndex].classList.add('opacity-100');
+        $images.eq(currentIndex).removeClass('opacity-100').addClass('opacity-0');
+        currentIndex = (currentIndex + 1) % $images.length;
+        $images.eq(currentIndex).removeClass('opacity-0').addClass('opacity-100');
     }
 
-    if (images.length > 0) {
-        images[0].classList.add('opacity-100');
+    if ($images.length > 0) {
+        $images.eq(0).addClass('opacity-100');
         setInterval(showNextImage, 5000);
     }
 
     // Initial overflow handling
-    document.body.style.overflow = 'hidden';
+    $('body').css('overflow', 'hidden');
     setTimeout(() => {
-        document.body.style.overflow = '';
+        $('body').css('overflow', '');
     }, 2500);
-};
+});
 
 // Intersection Observer for reveal animations
-document.addEventListener('DOMContentLoaded', function () {
+$(document).ready(function () {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting && !entry.target.classList.contains('reveal')) {
+            if (entry.isIntersecting && !$(entry.target).hasClass('reveal')) {
                 requestAnimationFrame(() => {
-                    entry.target.classList.add('reveal');
-                    entry.target.style.opacity = '1';
+                    $(entry.target).addClass('reveal').css('opacity', '1');
                 });
             }
         });
@@ -86,8 +79,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     setTimeout(() => {
-        document.querySelectorAll('.text-reveal, section > div, .map-container').forEach(element => {
-            if (!element.classList.contains('reveal')) {
+        $('.text-reveal, section > div, .map-container').each((_, element) => {
+            if (!$(element).hasClass('reveal')) {
                 observer.observe(element);
             }
         });
@@ -131,17 +124,17 @@ if (thingText.chars) {
 }
 
 // Hidden Footer Scroll Behavior
-const footer = document.getElementById('hidden-footer');
+const $footer = $('#hidden-footer');
 
-window.addEventListener('scroll', () => {
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-    const scrollPosition = window.scrollY + windowHeight;
+$(window).on('scroll', () => {
+    const windowHeight = $(window).height();
+    const documentHeight = $(document).height();
+    const scrollPosition = $(window).scrollTop() + windowHeight;
     const buffer = 20;
 
     if (documentHeight - scrollPosition <= buffer) {
-        footer.style.transform = 'translateY(0)';
+        $footer.css('transform', 'translateY(0)');
     } else {
-        footer.style.transform = 'translateY(100%)';
+        $footer.css('transform', 'translateY(100%)');
     }
 });

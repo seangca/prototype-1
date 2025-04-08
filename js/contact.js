@@ -1,9 +1,9 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('contactForm');
-    const submitButton = document.getElementById('submitButton');
-    const submitStatus = document.getElementById('submitStatus');
-    const successMessage = submitStatus.querySelector('.success');
-    const errorMessage = submitStatus.querySelector('.error');
+$(document).ready(function() {
+    const $form = $('#contactForm');
+    const $submitButton = $('#submitButton');
+    const $submitStatus = $('#submitStatus');
+    const $successMessage = $submitStatus.find('.success');
+    const $errorMessage = $submitStatus.find('.error');
 
     // Validation patterns
     const patterns = {
@@ -16,66 +16,62 @@ document.addEventListener('DOMContentLoaded', function() {
     const errorMessages = {};
 
     // Real-time validation
-    const inputs = form.querySelectorAll('input, textarea, select');
-    inputs.forEach(input => {
+    const $inputs = $form.find('input, textarea, select');
+    $inputs.each(function() {
+        const $input = $(this);
         // Create error message element
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'text-red-500 text-sm mt-1 hidden';
-        input.parentNode.appendChild(errorDiv);
-        errorMessages[input.id] = errorDiv;
+        const $errorDiv = $('<div>').addClass('text-red-500 text-sm mt-1 hidden');
+        $input.parent().append($errorDiv);
+        errorMessages[$input.attr('id')] = $errorDiv;
 
-        input.addEventListener('input', function() {
-            validateField(input);
-        });
-
-        input.addEventListener('blur', function() {
-            validateField(input);
+        $input.on('input blur', function() {
+            validateField($input);
         });
     });
 
-    function validateField(field) {
-        const errorDiv = errorMessages[field.id];
+    function validateField($field) {
+        const $errorDiv = errorMessages[$field.attr('id')];
         let isValid = true;
         let errorMessage = '';
 
         // Clear previous error state
-        field.classList.remove('border-red-500', 'border-green-500');
-        errorDiv.classList.add('hidden');
+        $field.removeClass('border-red-500 border-green-500');
+        $errorDiv.addClass('hidden');
 
         // Required field validation
-        if (field.required && !field.value.trim()) {
+        if ($field.prop('required') && !$field.val().trim()) {
             isValid = false;
             errorMessage = 'This field is required';
         } else {
             // Specific field validations
-            switch(field.id) {
+            switch($field.attr('id')) {
                 case 'firstName':
                 case 'lastName':
-                    if (!patterns.name.test(field.value.trim())) {
+                    if (!patterns.name.test($field.val().trim())) {
                         isValid = false;
                         errorMessage = 'Please enter a valid name (2-30 letters, hyphens and apostrophes allowed)';
                     }
                     break;
                 case 'email':
-                    if (!patterns.email.test(field.value.trim())) {
+                    if (!patterns.email.test($field.val().trim())) {
                         isValid = false;
                         errorMessage = 'Please enter a valid email address';
                     }
                     break;
                 case 'phone':
-                    if (field.value.trim() && !patterns.phone.test(field.value.trim())) {
+                    if ($field.val().trim() && !patterns.phone.test($field.val().trim())) {
                         isValid = false;
                         errorMessage = 'Please enter a valid phone number (e.g., 123-456-7890)';
                     }
                     break;
                 case 'message':
-                    if (field.value.trim().length < 10) {
+                    if ($field.val().trim().length < 10) {
                         isValid = false;
                         errorMessage = 'Message must be at least 10 characters long';
                     }
                     break;
                 case 'subject':
-                    if (field.value === "") {
+                    if ($field.val() === "") {
                         isValid = false;
                         errorMessage = 'Please select a subject';
                     }
@@ -85,41 +81,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Update UI based on validation
         if (!isValid) {
-            field.classList.add('border-red-500');
-            errorDiv.textContent = errorMessage;
-            errorDiv.classList.remove('hidden');
+            $field.addClass('border-red-500');
+            $errorDiv.text(errorMessage).removeClass('hidden');
         } else {
-            field.classList.add('border-green-500');
+            $field.addClass('border-green-500');
         }
 
         return isValid;
     }
 
-    form.addEventListener('submit', function(e) {
+    $form.on('submit', function(e) {
         e.preventDefault();
         
         // Validate all fields
         let isFormValid = true;
-        inputs.forEach(input => {
-            if (!validateField(input)) {
+        $inputs.each(function() {
+            if (!validateField($(this))) {
                 isFormValid = false;
             }
         });
 
         if (!isFormValid) {
-            errorMessage.textContent = 'Please correct the errors in the form';
-            errorMessage.classList.remove('hidden');
+            $errorMessage.text('Please correct the errors in the form').removeClass('hidden');
             return;
         }
 
         // Disable submit button and show loading state
-        submitButton.disabled = true;
-        submitButton.innerHTML = 'Sending...';
+        $submitButton.prop('disabled', true).html('Sending...');
         
         // Hide any previous status messages
-        submitStatus.classList.remove('hidden');
-        successMessage.classList.add('hidden');
-        errorMessage.classList.add('hidden');
+        $submitStatus.removeClass('hidden');
+        $successMessage.addClass('hidden');
+        $errorMessage.addClass('hidden');
 
         // Get current time
         const now = new Date();
@@ -127,37 +120,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Prepare the email parameters
         const templateParams = {
-            name: `${form.firstName.value} ${form.lastName.value}`,
+            name: `${$form.find('#firstName').val()} ${$form.find('#lastName').val()}`,
             time: timeString,
-            message: `Subject: ${form.subject.value}
-Email: ${form.email.value}
-Phone: ${form.phone.value || 'Not provided'}
+            message: `Subject: ${$form.find('#subject').val()}
+Email: ${$form.find('#email').val()}
+Phone: ${$form.find('#phone').val() || 'Not provided'}
 
 Message:
-${form.message.value}`
+${$form.find('#message').val()}`
         };
 
         // Send the email using EmailJS
         emailjs.send('service_5sb36rn', 'template_6tfug9x', templateParams)
             .then(function() {
                 // Show success message
-                successMessage.classList.remove('hidden');
-                form.reset();
+                $successMessage.removeClass('hidden');
+                $form[0].reset();
                 // Reset validation states
-                inputs.forEach(input => {
-                    input.classList.remove('border-red-500', 'border-green-500');
-                    errorMessages[input.id].classList.add('hidden');
+                $inputs.removeClass('border-red-500 border-green-500');
+                $inputs.each(function() {
+                    errorMessages[$(this).attr('id')].addClass('hidden');
                 });
             })
             .catch(function(error) {
                 // Show error message
                 console.error('Email error:', error);
-                errorMessage.classList.remove('hidden');
+                $errorMessage.removeClass('hidden');
             })
             .finally(function() {
                 // Re-enable submit button
-                submitButton.disabled = false;
-                submitButton.innerHTML = 'Send Message';
+                $submitButton.prop('disabled', false).html('Send Message');
             });
     });
 });
