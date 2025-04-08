@@ -5,6 +5,47 @@ $(document).ready(function() {
     const $successMessage = $submitStatus.find('.success');
     const $errorMessage = $submitStatus.find('.error');
 
+    // Initialize date range picker
+    let startDate, endDate;
+    
+    $('#startDate').datepicker({
+        dateFormat: 'MM d, yy',
+        minDate: 0,
+        showAnim: 'fadeIn',
+        onSelect: function(selectedDate) {
+            startDate = $(this).datepicker('getDate');
+            let minEndDate = new Date(startDate);
+            $('#endDate').datepicker('option', 'minDate', minEndDate);
+        },
+        beforeShow: function(input, inst) {
+            setTimeout(function() {
+                inst.dpDiv.addClass('bg-zinc-800 text-white border-zinc-700');
+                $('.ui-datepicker-header').addClass('bg-zinc-900 border-zinc-700');
+                $('.ui-datepicker-calendar th').addClass('text-yellow-300');
+                $('.ui-datepicker-calendar td:not(.ui-datepicker-other-month) a').addClass('text-white hover:bg-yellow-300 hover:text-black');
+                $('.ui-datepicker-calendar td.ui-datepicker-other-month a').addClass('text-zinc-500');
+            }, 0);
+        }
+    });
+
+    $('#endDate').datepicker({
+        dateFormat: 'MM d, yy',
+        minDate: 0,
+        showAnim: 'fadeIn',
+        onSelect: function(selectedDate) {
+            endDate = $(this).datepicker('getDate');
+        },
+        beforeShow: function(input, inst) {
+            setTimeout(function() {
+                inst.dpDiv.addClass('bg-zinc-800 text-white border-zinc-700');
+                $('.ui-datepicker-header').addClass('bg-zinc-900 border-zinc-700');
+                $('.ui-datepicker-calendar th').addClass('text-yellow-300');
+                $('.ui-datepicker-calendar td:not(.ui-datepicker-other-month) a').addClass('text-white hover:bg-yellow-300 hover:text-black');
+                $('.ui-datepicker-calendar td.ui-datepicker-other-month a').addClass('text-zinc-500');
+            }, 0);
+        }
+    });
+
     // Validation patterns
     const patterns = {
         name: /^[a-zA-Z\s'-]{2,30}$/,
@@ -125,6 +166,7 @@ $(document).ready(function() {
             message: `Subject: ${$form.find('#subject').val()}
 Email: ${$form.find('#email').val()}
 Phone: ${$form.find('#phone').val() || 'Not provided'}
+Date Range: ${$form.find('#startDate').val() || 'Not specified'} to ${$form.find('#endDate').val() || 'Not specified'}
 
 Message:
 ${$form.find('#message').val()}`
