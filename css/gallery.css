@@ -68,3 +68,22 @@
 .progress-bar {
     transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
+
+
+/* Draggable Carousel Styles */
+.carousel-item.active img {
+    cursor: grab;
+    user-select: none;
+    touch-action: none; /* Important for touch devices */
+}
+
+.carousel-item.active img.ui-draggable-dragging {
+    cursor: grabbing;
+    transition: none !important;
+}
+
+/* Fix for jQuery UI positioning */
+.ui-draggable-handle {
+    position: relative;
+    left: 0;
+}
