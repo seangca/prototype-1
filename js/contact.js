@@ -131,6 +131,7 @@ $(document).ready(function() {
         return isValid;
     }
 
+    // Form submission handling
     $form.on('submit', function(e) {
         e.preventDefault();
         
@@ -148,7 +149,7 @@ $(document).ready(function() {
         }
 
         // Disable submit button and show loading state
-        $submitButton.prop('disabled', true).html('Sending...');
+        $submitButton.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Sending...');
         
         // Hide any previous status messages
         $submitStatus.removeClass('hidden');
@@ -159,39 +160,58 @@ $(document).ready(function() {
         const now = new Date();
         const timeString = now.toLocaleString();
 
-        // Prepare the email parameters
-        const templateParams = {
+        // Prepare the form data
+        const formData = {
             name: `${$form.find('#firstName').val()} ${$form.find('#lastName').val()}`,
             time: timeString,
-            message: `Subject: ${$form.find('#subject').val()}
-Email: ${$form.find('#email').val()}
-Phone: ${$form.find('#phone').val() || 'Not provided'}
-Date Range: ${$form.find('#startDate').val() || 'Not specified'} to ${$form.find('#endDate').val() || 'Not specified'}
-
-Message:
-${$form.find('#message').val()}`
+            subject: $form.find('#subject').val(),
+            email: $form.find('#email').val(),
+            phone: $form.find('#phone').val() || 'Not provided',
+            dateRange: `${$form.find('#startDate').val() || 'Not specified'} to ${$form.find('#endDate').val() || 'Not specified'}`,
+            message: $form.find('#message').val()
         };
 
-        // Send the email using EmailJS
-        emailjs.send('service_5sb36rn', 'template_6tfug9x', templateParams)
-            .then(function() {
+        // Send AJAX request
+        $.ajax({
+            url: 'https://api.emailjs.com/api/v1.0/email/send',
+            type: 'POST',
+            data: JSON.stringify({
+                service_id: 'service_5sb36rn',
+                template_id: 'template_6tfug9x',
+                user_id: 's5L1Fg98w4PSn4Laq',
+                template_params: {
+                    name: formData.name,
+                    time: formData.time,
+                    message: `Subject: ${formData.subject}
+Email: ${formData.email}
+Phone: ${formData.phone}
+Date Range: ${formData.dateRange}
+
+Message:
+${formData.message}`
+                }
+            }),
+            contentType: 'application/json',
+            success: function(response) {
                 // Show success message
                 $successMessage.removeClass('hidden');
+                // Reset form
                 $form[0].reset();
                 // Reset validation states
                 $inputs.removeClass('border-red-500 border-green-500');
                 $inputs.each(function() {
                     errorMessages[$(this).attr('id')].addClass('hidden');
                 });
-            })
-            .catch(function(error) {
+            },
+            error: function(error) {
                 // Show error message
                 console.error('Email error:', error);
                 $errorMessage.removeClass('hidden');
-            })
-            .finally(function() {
+            },
+            complete: function() {
                 // Re-enable submit button
                 $submitButton.prop('disabled', false).html('Send Message');
-            });
+            }
+        });
     });
 });
