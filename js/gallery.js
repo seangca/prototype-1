@@ -162,4 +162,16 @@ $(document).ready(function() {
             }
         });
     });
+
+    $("#zoom-slider").slider({
+        orientation: "vertical",  // Change to vertical
+        range: "min",
+        min: 50,
+        max: 200,
+        value: 100,
+        slide: function(event, ui) {
+            // Apply zoom to carousel images based on slider value
+            $(".carousel-item img").css("transform", "scale(" + ui.value / 100 + ")");
+        }
+    });
 });

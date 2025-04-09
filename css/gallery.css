@@ -87,3 +87,10 @@
     position: relative;
     left: 0;
 }
+
+#zoom-slider {
+    background: #f5f5f5;
+    border-radius: 10px;
+    z-index: 100; /* Make sure the slider stays on top */
+    padding: 0 5px;  /* Adds padding so the handle fits within the slider */
+}
