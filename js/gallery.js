@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    // Add font-style to all h3  and p elements in carousels
+    $('.carousel-item h3').addClass('font-protest-revolution');
+    $('.carousel-item p').addClass('font-syne');
 
     let currentSlide = 0;
     const slides = document.querySelectorAll('.carousel-item');
@@ -8,6 +11,18 @@ $(document).ready(function () {
     let touchStartX = 0;
     let touchEndX = 0;
     const carousel = document.querySelector('.carousel-track');
+
+    // Add event listeners for navigation buttons
+    document.querySelectorAll('.nav-button').forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (button.getAttribute('title') === 'Previous slide') {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
+        });
+    });
 
     // Add touch events for swipe
     carousel.addEventListener('touchstart', e => {
@@ -87,5 +102,4 @@ $(document).ready(function () {
 
     // Initialize slides
     updateSlides();
-
 });
