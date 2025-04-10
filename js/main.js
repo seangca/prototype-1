@@ -13,8 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize loading first
     initializeLoading();
 
+    // Initialize carousel immediately to start loading images
+    initializeCarousel();
+
     // Initialize all components when document is ready
     $(document).ready(() => {
+        // Initialize navigation after carousel
         initializeNavigation();
         initializeAnimations();
         initializeGSAPAnimations();
@@ -26,7 +30,4 @@ document.addEventListener('DOMContentLoaded', () => {
             $('body').css('overflow', '');
         }, 2500);
     });
-
-    // Initialize carousel immediately to start loading images
-    initializeCarousel();
 });

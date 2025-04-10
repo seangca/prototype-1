@@ -5,40 +5,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RUNMAR VISUALS</title>
-
-    
-
     <!-- google font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Protest+Revolution&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <!-- tailwindcss -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  
-
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="jquery-ui-1.14.1.custom/jquery-ui-1.14.1.custom/jquery-ui.css">
     <script src="jquery-ui-1.14.1.custom/jquery-ui-1.14.1.custom/jquery-ui.min.js"></script>
-
-
     <!-- gsap plug-ins -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
-
     <!-- external icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-
     <!-- personal css -->
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/animations.css">
     <link rel="stylesheet" href="css/reveal.css">
     <link rel="stylesheet" href="css/bounce.css">
     <link rel="stylesheet" href="css/loading.css">
-
 </head>
 
 <body class="bg-black font-syne">
@@ -222,38 +211,45 @@
             </div>
         </section>
 
-        <div class="w-full mx-auto relative text-center py-32 bg-black">
+        <div class="w-full mx-auto relative text-center py-32 bg-black mb-16">
             <div class="max-w-4xl mx-auto px-6">
-                <h2 class="font-protest-revolution text-[clamp(2rem,6vw,6rem)] font-black tracking-wider text-white uppercase text-reveal mb-8">Want to work together?</h2>
-                <a href="pages/contact.html" class="inline-block px-8 py-4 bg-yellow-300 text-black font-protest-revolution font-bold text-lg hover:bg-yellow-400 transition-colors duration-300 text-reveal rounded-sm">Let's Connect</a>
+                <h2 class="font-protest-revolution text-[clamp(2rem,6vw,6rem)] font-black tracking-wider text-white uppercase text-reveal mb-8">
+                    Want to work together?
+                </h2>
+                <a href="pages/contact.html" class="inline-block px-8 py-4 bg-yellow-300 text-black font-protest-revolution font-bold text-lg hover:bg-yellow-400 transition-colors duration-300 text-reveal rounded-sm">
+                    Let's Connect
+                </a>
             </div>
         </div>
-
-        <div class="h-32"></div>
-
-        <footer class="fixed bottom-0 w-full bg-black bg-opacity-90 text-white transform translate-y-full transition-transform duration-500 ease-in-out z-50" id="hidden-footer">
-            <div class="container mx-auto py-4 px-6">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <div class="text-sm mb-2 md:mb-0">
-                        <p>&copy; 2025 RUNMAR SARDUA. All rights reserved.</p>
-                    </div>
-                    <div class="flex space-x-6">
-                        <a href="#" class="text-yellow-300 hover:text-yellow-400 transition-colors text-xl">
-                            <i class="fab fa-youtube"></i>
-                        </a>
-                        <a href="#" class="text-yellow-300 hover:text-yellow-400 transition-colors text-xl">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#" class="text-yellow-300 hover:text-yellow-400 transition-colors text-xl">
-                            <i class="fab fa-tiktok"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </footer>
     </main>
 
+    <footer class="fixed bottom-0 w-full bg-black bg-opacity-90 text-white transform translate-y-full transition-transform duration-500 ease-in-out z-50" id="hidden-footer">
+        <div class="container mx-auto py-4 px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-sm mb-2 md:mb-0">
+                    <p>&copy; 2025 RUNMAR SARDUA. All rights reserved.</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-yellow-300 hover:text-yellow-400 transition-colors text-xl">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    <a href="#" class="text-yellow-300 hover:text-yellow-400 transition-colors text-xl">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="text-yellow-300 hover:text-yellow-400 transition-colors text-xl">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <script src="https://unpkg.com/split-type"></script>
+    <script src="js/loading.js" type="module"></script>
+    <script src="js/carousel.js" type="module"></script>
+    <script src="js/navigation.js" type="module"></script>
+    <script src="js/animations.js" type="module"></script>
+    <script src="js/footer.js" type="module"></script>
     <script src="js/main.js" type="module"></script>
 </body>
 </html>
