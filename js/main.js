@@ -8,24 +8,25 @@ import { initializeLoading } from './loading.js';
 // Apply Tailwind configuration
 tailwind.config = tailwindConfig;
 
-// Initialize loading first
-initializeLoading();
+// Wait for DOM content to be loaded before initializing
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize loading first
+    initializeLoading();
 
-// Initialize all components when document is ready
-$(document).ready(function() {
-    initializeNavigation();
-    initializeAnimations();
-    initializeGSAPAnimations();
-    initializeFooter();
-    
-    // Initial overflow handling
-    $('body').css('overflow', 'hidden');
-    setTimeout(() => {
-        $('body').css('overflow', '');
-    }, 2500);
-});
+    // Initialize all components when document is ready
+    $(document).ready(() => {
+        initializeNavigation();
+        initializeAnimations();
+        initializeGSAPAnimations();
+        initializeFooter();
+        
+        // Initial overflow handling
+        $('body').css('overflow', 'hidden');
+        setTimeout(() => {
+            $('body').css('overflow', '');
+        }, 2500);
+    });
 
-// Initialize carousel on window load
-$(window).on('load', function() {
+    // Initialize carousel immediately to start loading images
     initializeCarousel();
 });
