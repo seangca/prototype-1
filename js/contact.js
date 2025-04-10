@@ -1,9 +1,10 @@
-$(document).ready(function() {
+// Initialize contact form functionality
+export function initializeContactForm() {
     const $form = $('#contactForm');
-    const $submitButton = $('#submitButton');
     const $submitStatus = $('#submitStatus');
     const $successMessage = $submitStatus.find('.success');
     const $errorMessage = $submitStatus.find('.error');
+    const $submitButton = $('#submitButton');
 
     // Initialize date range picker
     let startDate, endDate;
@@ -46,107 +47,116 @@ $(document).ready(function() {
         }
     });
 
-    // Validation patterns
-    const patterns = {
-        name: /^[a-zA-Z\s'-]{2,30}$/,
-        email: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-        phone: /^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
-    };
-
-    // Error messages container
-    const errorMessages = {};
-
-    // Real-time validation
-    const $inputs = $form.find('input, textarea, select');
-    $inputs.each(function() {
-        const $input = $(this);
-        // Create error message element
-        const $errorDiv = $('<div>').addClass('text-red-500 text-sm mt-1 hidden');
-        $input.parent().append($errorDiv);
-        errorMessages[$input.attr('id')] = $errorDiv;
-
-        $input.on('input blur', function() {
-            validateField($input);
-        });
+    // Initialize jQuery Validation
+    $form.validate({
+        rules: {
+            firstName: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+                pattern: /^[a-zA-Z\s'-]+$/
+            },
+            lastName: {
+                required: true,
+                minlength: 2,
+                maxlength: 30,
+                pattern: /^[a-zA-Z\s'-]+$/
+            },
+            email: {
+                required: true,
+                email: true
+            },
+            phone: {
+                pattern: /^[2-9]\d{2}[\s-]?(\d{3})[\s-]?(\d{4})$/
+            },
+            subject: {
+                required: true
+            },
+            message: {
+                required: true,
+                minlength: 10
+            }
+        },
+        messages: {
+            firstName: {
+                required: 'Please enter your first name',
+                minlength: 'First name must be at least 2 characters',
+                maxlength: 'First name cannot exceed 30 characters',
+                pattern: 'Please enter a valid name (letters, spaces, hyphens, and apostrophes only)'
+            },
+            lastName: {
+                required: 'Please enter your last name',
+                minlength: 'Last name must be at least 2 characters',
+                maxlength: 'Last name cannot exceed 30 characters',
+                pattern: 'Please enter a valid name (letters, spaces, hyphens, and apostrophes only)'
+            },
+            email: {
+                required: 'Please enter your email address',
+                email: 'Please enter a valid email address'
+            },
+            phone: {
+                pattern: 'Please enter a valid phone number (e.g., 123-456-7890 or 1234567890)'
+            },
+            subject: {
+                required: 'Please select a subject'
+            },
+            message: {
+                required: 'Please enter your message',
+                minlength: 'Message must be at least 10 characters'
+            }
+        },
+        errorElement: 'div',
+        errorClass: 'text-red-400 text-sm mt-1',
+        highlight: function(element, errorClass, validClass) {
+            $(element).addClass('border-red-400').removeClass('border-yellow-300');
+        },
+        unhighlight: function(element, errorClass, validClass) {
+            $(element).addClass('border-yellow-300').removeClass('border-red-400');
+        },
+        errorPlacement: function(error, element) {
+            error.insertAfter(element);
+        }
     });
 
-    function validateField($field) {
-        const $errorDiv = errorMessages[$field.attr('id')];
-        let isValid = true;
-        let errorMessage = '';
-
-        // Clear previous error state
-        $field.removeClass('border-red-500 border-green-500');
-        $errorDiv.addClass('hidden');
-
-        // Required field validation
-        if ($field.prop('required') && !$field.val().trim()) {
-            isValid = false;
-            errorMessage = 'This field is required';
-        } else {
-            // Specific field validations
-            switch($field.attr('id')) {
-                case 'firstName':
-                case 'lastName':
-                    if (!patterns.name.test($field.val().trim())) {
-                        isValid = false;
-                        errorMessage = 'Please enter a valid name (2-30 letters, hyphens and apostrophes allowed)';
-                    }
-                    break;
-                case 'email':
-                    if (!patterns.email.test($field.val().trim())) {
-                        isValid = false;
-                        errorMessage = 'Please enter a valid email address';
-                    }
-                    break;
-                case 'phone':
-                    if ($field.val().trim() && !patterns.phone.test($field.val().trim())) {
-                        isValid = false;
-                        errorMessage = 'Please enter a valid phone number (e.g., 123-456-7890)';
-                    }
-                    break;
-                case 'message':
-                    if ($field.val().trim().length < 10) {
-                        isValid = false;
-                        errorMessage = 'Message must be at least 10 characters long';
-                    }
-                    break;
-                case 'subject':
-                    if ($field.val() === "") {
-                        isValid = false;
-                        errorMessage = 'Please select a subject';
-                    }
-                    break;
-            }
+    // Format phone number with hyphens
+    function formatPhoneNumber(phone) {
+        if (!phone) return '';
+        phone = phone.replace(/\D/g, ''); // Remove all non-digit characters
+        if (phone.length === 10) {
+            return `${phone.slice(0, 3)}-${phone.slice(3, 6)}-${phone.slice(6)}`;
         }
-
-        // Update UI based on validation
-        if (!isValid) {
-            $field.addClass('border-red-500');
-            $errorDiv.text(errorMessage).removeClass('hidden');
-        } else {
-            $field.addClass('border-green-500');
-        }
-
-        return isValid;
+        return phone;
     }
+
+    // Format phone number on blur
+    $('#phone').on('blur', function() {
+        const phone = $(this).val();
+        $(this).val(formatPhoneNumber(phone));
+    });
 
     // Form submission handling
     $form.on('submit', function(e) {
         e.preventDefault();
         
-        // Validate all fields
-        let isFormValid = true;
-        $inputs.each(function() {
-            if (!validateField($(this))) {
-                isFormValid = false;
-            }
-        });
-
-        if (!isFormValid) {
-            $errorMessage.text('Please correct the errors in the form').removeClass('hidden');
+        if (!$form.valid()) {
             return;
         }
+
+        // Format phone number before submission
+        const phone = $('#phone').val();
+        $('#phone').val(formatPhoneNumber(phone));
+
+        // Get form data
+        const formData = {
+            firstName: $('#firstName').val(),
+            lastName: $('#lastName').val(),
+            email: $('#email').val(),
+            phone: $('#phone').val(),
+            subject: $('#subject').val(),
+            startDate: $('#startDate').val(),
+            endDate: $('#endDate').val(),
+            message: $('#message').val()
+        };
 
         // Disable submit button and show loading state
         $submitButton.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Sending...');
@@ -155,21 +165,6 @@ $(document).ready(function() {
         $submitStatus.removeClass('hidden');
         $successMessage.addClass('hidden');
         $errorMessage.addClass('hidden');
-
-        // Get current time
-        const now = new Date();
-        const timeString = now.toLocaleString();
-
-        // Prepare the form data
-        const formData = {
-            name: `${$form.find('#firstName').val()} ${$form.find('#lastName').val()}`,
-            time: timeString,
-            subject: $form.find('#subject').val(),
-            email: $form.find('#email').val(),
-            phone: $form.find('#phone').val() || 'Not provided',
-            dateRange: `${$form.find('#startDate').val() || 'Not specified'} to ${$form.find('#endDate').val() || 'Not specified'}`,
-            message: $form.find('#message').val()
-        };
 
         // Send AJAX request
         $.ajax({
@@ -180,38 +175,70 @@ $(document).ready(function() {
                 template_id: 'template_6tfug9x',
                 user_id: 's5L1Fg98w4PSn4Laq',
                 template_params: {
-                    name: formData.name,
-                    time: formData.time,
-                    message: `Subject: ${formData.subject}
-Email: ${formData.email}
-Phone: ${formData.phone}
-Date Range: ${formData.dateRange}
-
-Message:
-${formData.message}`
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    email: formData.email,
+                    phone: formData.phone || 'Not provided',
+                    subject: formData.subject,
+                    startDate: formData.startDate || 'Not specified',
+                    endDate: formData.endDate || 'Not specified',
+                    message: formData.message
                 }
             }),
             contentType: 'application/json',
             success: function(response) {
                 // Show success message
-                $successMessage.removeClass('hidden');
+                showSuccess();
                 // Reset form
                 $form[0].reset();
+                // Reset date pickers
+                $('#startDate').datepicker('setDate', null);
+                $('#endDate').datepicker('setDate', null);
                 // Reset validation states
-                $inputs.removeClass('border-red-500 border-green-500');
-                $inputs.each(function() {
-                    errorMessages[$(this).attr('id')].addClass('hidden');
-                });
+                $form.find('input, select, textarea').removeClass('border-red-400 border-yellow-300');
+                $form.find('.text-red-400').addClass('hidden');
             },
-            error: function(error) {
-                // Show error message
-                console.error('Email error:', error);
-                $errorMessage.removeClass('hidden');
+            error: function(xhr, status, error) {
+                console.error('EmailJS error:', error);
+                showError('There was an error sending your message. Please try again.');
             },
             complete: function() {
-                // Re-enable submit button
+                // Re-enable submit button and reset text
                 $submitButton.prop('disabled', false).html('Send Message');
             }
         });
     });
+
+    // Helper functions
+    function showSuccess() {
+        $successMessage.removeClass('hidden');
+        $errorMessage.addClass('hidden');
+        $submitStatus.removeClass('hidden');
+    }
+
+    function showError(message) {
+        $errorMessage.text(message);
+        $errorMessage.removeClass('hidden');
+        $successMessage.addClass('hidden');
+        $submitStatus.removeClass('hidden');
+    }
+
+    // Add smooth scrolling to anchor links
+    $('a[href*="#"]:not([href="#"])').click(function() {
+        if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+            var target = $(this.hash);
+            target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+            if (target.length) {
+                $('html, body').animate({
+                    scrollTop: target.offset().top
+                }, 1000);
+                return false;
+            }
+        }
+    });
+}
+
+// Initialize the contact form when the document is ready
+document.addEventListener('DOMContentLoaded', () => {
+    initializeContactForm();
 });
