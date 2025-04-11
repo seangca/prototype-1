@@ -7,56 +7,44 @@ function gallery() {
         galleries: {},
 
         initGalleries() {
-            // Initialize galleries
-            this.galleries.events = Array.from(this.$refs.events.querySelectorAll('img')).map((img, index) => {
-                img.setAttribute('data-index', index + 1);
-                return {
-                    src: img.src,
-                    alt: img.alt,
-                    element: img
-                };
+            // Initialize all galleries
+            Object.keys(this.galleries).forEach(galleryName => {
+                if (this.$refs[galleryName]) {
+                    this.galleries[galleryName] = Array.from(
+                        this.$refs[galleryName].querySelectorAll('img')
+                    ).map((img, index) => {
+                        img.setAttribute('data-index', index + 1);
+                        return {
+                            src: img.src,
+                            alt: img.alt,
+                            element: img
+                        };
+                    });
+                }
             });
 
-            this.galleries.automotive = Array.from(this.$refs.automotive.querySelectorAll('img')).map((img, index) => {
-                img.setAttribute('data-index', index + 1);
-                return {
-                    src: img.src,
-                    alt: img.alt,
-                    element: img
-                };
-            });
-
-            // Initialize sortable and tooltips after Alpine is done rendering
             this.$nextTick(() => {
                 this.initSortableGalleries();
                 this.initTooltips();
             });
         },
 
-        initTooltips() {
-            // Destroy any existing tooltips first to avoid duplicates
-            $('li.relative button').tooltip('destroy');
-
-            // Initialize new tooltips
-            $('li.relative button').tooltip({
-                tooltipClass: "ui-widget ui-tooltip ui-corner-all",
-                position: {
-                    my: "center bottom-10",
-                    at: "center top",
-                    collision: "flipfit"
-                },
-                show: {
-                    effect: "fadeIn",
-                    duration: 200
-                },
-                hide: {
-                    effect: "fadeOut",
-                    duration: 200
-                },
-                content: "View Image"
-            });
+        // Modified open method to handle both image and button clicks
+        open(event, galleryName) {
+            event.stopPropagation(); // Prevent event bubbling
+            
+            // Handle both button and image clicks
+            const clickedElement = event.target.closest('button') ? 
+                event.target.closest('li').querySelector('img') : 
+                event.target;
+                
+            this.currentGallery = galleryName;
+            this.currentIndex = parseInt(clickedElement.dataset.index) - 1;
+            this.activeUrl = clickedElement.src;
+            this.opened = true;
         },
 
+        // Update sortable initialization to preserve click events
         initSortableGalleries() {
             $(".draggable-gallery").sortable({
                 handle: ".drag-handle",
@@ -65,6 +53,7 @@ function gallery() {
                 opacity: 0.7,
                 placeholder: "sortable-placeholder",
                 tolerance: "pointer",
+                cancel: "button, img", // Allow clicks on these elements
                 start: (e, ui) => {
                     ui.placeholder.height(ui.item.height());
                     $(ui.item).css({
@@ -86,8 +75,7 @@ function gallery() {
                 }
             });
 
-            // Prevent handle clicks from triggering image clicks
-            $(".drag-handle").on("mousedown", function (e) {
+            $(".drag-handle").on("mousedown", function(e) {
                 e.stopPropagation();
             });
         },

@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+main {
+    margin-bottom: 5em
+}
+
+[x-cloak] {
+    display: none;
+}
+
+
+:root {
+    --c-bg: snow;
+    --c-scrollbar: lightsteelblue;
+    --c-scrollbar-hover: #000;
+}
+
+html {
+    background-color: var(--c-bg);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+html.dark {
+    --c-bg: #050505;
+    --c-scrollbar: #111;
+    --c-scrollbar-hover: #222;
+}
+
+body {
+    height: 100%;
+    overflow-y: scroll;
+}
+
+::selection {
+    background: #8884;
+}
+
+* {
+    scrollbar-color: var(--c-scrollbar) var(--c-bg);
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar:horizontal {
+    height: 6px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+    background: var(--c-bg);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--c-scrollbar);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--c-scrollbar-hover);
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+/* Tooltip styling */
+.ui-tooltip {
+    padding: 8px 12px;
+    background: #333;
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;
+    max-width: 200px;
+    z-index: 9999;
+}
+
+/* Tooltip arrow */
+.ui-tooltip .ui-tooltip-content:after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    margin-left: -10px;
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: #333 transparent;
+}
