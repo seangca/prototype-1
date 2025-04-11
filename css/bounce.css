@@ -3,7 +3,7 @@
         transform: translateY(0);
     }
     50% {
-        transform: translateY(4px);
+        transform: translateY(2px);
     }
 }
 
@@ -12,7 +12,7 @@
         transform: translateY(0);
     }
     50% {
-        transform: translateY(2px);
+        transform: translateY(1px);
     }
 }
 
@@ -32,6 +32,7 @@
     will-change: transform;
     transform: translateZ(0);
     clip-path: inset(0 0 100% 0);
+    cursor: pointer;
 }
 
 .bounce-text {
@@ -41,6 +42,7 @@
     will-change: transform;
     transform: translateZ(0);
     clip-path: inset(0 0 100% 0);
+    cursor: pointer;
 }
 
 @media screen and (orientation: landscape) and (max-height: 600px) {

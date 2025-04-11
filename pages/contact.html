@@ -170,7 +170,12 @@
                             allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
                     </div>
-                    <div class="text-reveal">
+                    <div id="contactToggleWrapper">
+                        <button id="contactToggle" class="w-full text-center py-2 text-white hover:text-yellow-300 transition-colors font-protest-revolution text-lg text-reveal flex items-center justify-center gap-2">
+                            <i class="text-lg"></i><span class="toggle-text">+ Show Contact</span>
+                        </button>
+                    </div>
+                    <div id="contactInfo" class="text-reveal" style="display:none;">
                         <div>
                             <h3 class="font-protest-revolution text-xl mb-4 text-yellow-300">Location</h3>
                             <p class="text-zinc-300">Red Deer, Alberta<br>Canada</p>
@@ -180,7 +185,6 @@
                             <a href="mailto:runmarvisuals@gmail.com"
                                 class="text-zinc-300 hover:text-yellow-300 transition-colors">runmarvisuals@gmail.com</a>
                         </div>
-
                         <div class="mt-8">
                             <h3 class="font-protest-revolution text-xl mb-4 text-yellow-300">Follow Me</h3>
                             <div class="flex space-x-6">
@@ -226,6 +230,7 @@
 
     <script src="../js/main.js" type="module"></script>
     <script src="../js/contact.js"></script>
+    <script src="../js/contact-toggle.js"></script>
 
 </body>
 
