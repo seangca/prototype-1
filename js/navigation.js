@@ -22,7 +22,8 @@ export function initializeNavigation() {
 
     // Close mobile menu when clicking outside
     $(document).on('click', (e) => {
-        if (!$hamburger[0].contains(e.target) && !$mobileMenu[0].contains(e.target) && $mobileMenu.hasClass('active')) {
+        if (!$hamburger[0].contains(e.target) && !$mobileMenu[0]
+        .contains(e.target) && $mobileMenu.hasClass('active')) {
             $mobileMenu.removeClass('active');
             $menuIcon.addClass('fa-bars').removeClass('fa-times');
             $menuItems.addClass('opacity-0 translate-y-4');
