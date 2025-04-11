@@ -17,15 +17,6 @@ export function initializeContactForm() {
             startDate = $(this).datepicker('getDate');
             let minEndDate = new Date(startDate);
             $('#endDate').datepicker('option', 'minDate', minEndDate);
-        },
-        beforeShow: function(input, inst) {
-            setTimeout(function() {
-                inst.dpDiv.addClass('bg-zinc-800 text-white border-zinc-700');
-                $('.ui-datepicker-header').addClass('bg-zinc-900 border-zinc-700');
-                $('.ui-datepicker-calendar th').addClass('text-yellow-300');
-                $('.ui-datepicker-calendar td:not(.ui-datepicker-other-month) a').addClass('text-white hover:bg-yellow-300 hover:text-black');
-                $('.ui-datepicker-calendar td.ui-datepicker-other-month a').addClass('text-zinc-500');
-            }, 0);
         }
     });
 
@@ -35,15 +26,6 @@ export function initializeContactForm() {
         showAnim: 'fadeIn',
         onSelect: function(selectedDate) {
             endDate = $(this).datepicker('getDate');
-        },
-        beforeShow: function(input, inst) {
-            setTimeout(function() {
-                inst.dpDiv.addClass('bg-zinc-800 text-white border-zinc-700');
-                $('.ui-datepicker-header').addClass('bg-zinc-900 border-zinc-700');
-                $('.ui-datepicker-calendar th').addClass('text-yellow-300');
-                $('.ui-datepicker-calendar td:not(.ui-datepicker-other-month) a').addClass('text-white hover:bg-yellow-300 hover:text-black');
-                $('.ui-datepicker-calendar td.ui-datepicker-other-month a').addClass('text-zinc-500');
-            }, 0);
         }
     });
 
