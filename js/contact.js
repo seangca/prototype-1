@@ -1,5 +1,5 @@
 // Initialize contact form functionality
-export function initializeContactForm() {
+function initializeContactForm() {
     const $form = $('#contactForm');
     const $submitStatus = $('#submitStatus');
     const $successMessage = $submitStatus.find('.success');

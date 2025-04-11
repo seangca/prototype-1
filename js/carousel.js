@@ -1,5 +1,5 @@
 // Carousel functionality
-export function initializeCarousel() {
+function initializeCarousel() {
     const $images = $('.carousel img');
     let currentIndex = 0;
 
@@ -20,3 +20,6 @@ export function initializeCarousel() {
         $('body').css('overflow', '');
     }, 2500);
 }
+
+// Initialize the carousel when the document is ready
+$(document).ready(initializeCarousel);
