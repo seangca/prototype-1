@@ -1,96 +1,95 @@
-.carousel-container {
-    perspective: 1000px;
-    touch-action: pan-y pinch-zoom;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+main {
+    margin-bottom: 5em
 }
 
-.carousel-track {
-    transform-style: preserve-3d;
-    transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.carousel-item {
-    backface-visibility: hidden;
-    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.carousel-item.active {
-    opacity: 1;
-    transform: scale(1) translateZ(0);
-}
-
-@media (max-width: 640px) {
-    .carousel-item.prev {
-        opacity: 0;
-        transform: scale(0.8) translateX(-50%) translateZ(-100px);
-    }
-
-    .carousel-item.next {
-        opacity: 0;
-        transform: scale(0.8) translateX(50%) translateZ(-100px);
-    }
-}
-
-@media (min-width: 641px) {
-    .carousel-item.prev {
-        opacity: 0.7;
-        transform: scale(0.9) translateX(-100%) translateZ(-100px);
-    }
-
-    .carousel-item.next {
-        opacity: 0.7;
-        transform: scale(0.9) translateX(100%) translateZ(-100px);
-    }
-}
-
-.carousel-item.hidden {
-    opacity: 0;
-    transform: scale(0.8) translateZ(-200px);
-}
-
-.nav-button {
-    transition: all 0.3s;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-}
-
-@media (hover: hover) {
-    .nav-button:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: scale(1.1);
-    }
-}
-
-.nav-button:active {
-    transform: scale(0.95);
-}
-
-.progress-bar {
-    transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+[x-cloak] {
+    display: none;
 }
 
 
-/* Draggable Carousel Styles */
-.carousel-item.active img {
-    cursor: grab;
-    user-select: none;
-    touch-action: none; /* Important for touch devices */
+:root {
+    --c-bg: snow;
+    --c-scrollbar: lightsteelblue;
+    --c-scrollbar-hover: #000;
 }
 
-.carousel-item.active img.ui-draggable-dragging {
-    cursor: grabbing;
-    transition: none !important;
+html {
+    background-color: var(--c-bg);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
 }
 
-/* Fix for jQuery UI positioning */
-.ui-draggable-handle {
-    position: relative;
-    left: 0;
+html.dark {
+    --c-bg: #050505;
+    --c-scrollbar: #111;
+    --c-scrollbar-hover: #222;
 }
 
-#zoom-slider {
-    background: #f5f5f5;
+body {
+    height: 100%;
+    overflow-y: scroll;
+}
+
+::selection {
+    background: #8884;
+}
+
+* {
+    scrollbar-color: var(--c-scrollbar) var(--c-bg);
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar:horizontal {
+    height: 6px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+    background: var(--c-bg);
     border-radius: 10px;
-    z-index: 100; /* Make sure the slider stays on top */
-    padding: 0 5px;  /* Adds padding so the handle fits within the slider */
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--c-scrollbar);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--c-scrollbar-hover);
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+/* Tooltip styling */
+.ui-tooltip {
+    padding: 8px 12px;
+    background: #333;
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;
+    max-width: 200px;
+    z-index: 9999;
+}
+
+/* Tooltip arrow */
+.ui-tooltip .ui-tooltip-content:after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    margin-left: -10px;
+    border-width: 10px 10px 0;
+    border-style: solid;
+    border-color: #333 transparent;
 }
