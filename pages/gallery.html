@@ -90,11 +90,12 @@
         <section>
 
             <section x-data="{
-                // State variables
                 imageGalleryOpened: false,
                 imageGalleryActiveUrl: null,
                 imageGalleryImageIndex: null,
                 currentGallery: null,
+                zoomLevel: 1,
+            
                 galleries: {
                     events: [
                         { src: '../images/event1.jpg' },
@@ -130,15 +131,13 @@
                         { src: '../images/hobbies5.jpg' }
                     ]
                 },
-
-                // Methods
+            
                 initGalleries() {
-                    // Initialize sortable after Alpine is done rendering
                     this.$nextTick(() => {
                         this.initSortableGalleries();
                     });
                 },
-
+            
                 initSortableGalleries() {
                     $('.').sortable({
                         handle: '.',
@@ -149,13 +148,12 @@
                             this.updateGalleryIndexes(ui.item.closest('ul').dataset.galleryType);
                         }
                     });
-
-                    // Prevent handle clicks from triggering image clicks
+            
                     $('.').on('mousedown', function(e) {
                         e.stopPropagation();
                     });
                 },
-
+            
                 updateGalleryIndexes(galleryType) {
                     const galleryElement = this.$refs[galleryType];
                     if (galleryElement) {
@@ -168,23 +166,45 @@
                         });
                     }
                 },
-
+            
                 imageGalleryOpen(event, galleryType) {
                     const img = event.target;
                     this.imageGalleryActiveUrl = img.src;
                     this.imageGalleryImageIndex = parseInt(img.dataset.index) || 1;
                     this.currentGallery = galleryType;
                     this.imageGalleryOpened = true;
+                    this.zoomLevel = 1;
+            
+                    this.$nextTick(() => {
+                        const $slider = $('#zoom-slider');
+                        if ($slider.hasClass('ui-slider')) {
+                            $slider.slider('value', 1);
+                        } else {
+                            $slider.slider({
+                                value: 1,
+                                min: 1,
+                                max: 3,
+                                step: 0.1,
+                                slide: (event, ui) => {
+                                    this.zoomLevel = ui.value;
+                                }
+                            });
+                        }
+                    });
                 },
-
+            
                 imageGalleryClose() {
                     this.imageGalleryOpened = false;
+                    this.zoomLevel = 1;
+            
+                    $('#zoom-slider').slider('value', 1);
+            
                     setTimeout(() => {
                         this.imageGalleryActiveUrl = null;
                         this.currentGallery = null;
                     }, 300);
                 },
-
+            
                 imageGalleryNext() {
                     if (!this.currentGallery) return;
                     
@@ -192,8 +212,13 @@
                     let newIndex = this.imageGalleryImageIndex % gallery.length + 1;
                     this.imageGalleryImageIndex = newIndex;
                     this.imageGalleryActiveUrl = gallery[newIndex - 1].src;
+                    this.zoomLevel = 1;
+            
+                    this.$nextTick(() => {
+                        $('#zoom-slider').slider('value', 1);
+                    });
                 },
-
+            
                 imageGalleryPrev() {
                     if (!this.currentGallery) return;
                     
@@ -201,9 +226,19 @@
                     let newIndex = (this.imageGalleryImageIndex - 2 + gallery.length) % gallery.length + 1;
                     this.imageGalleryImageIndex = newIndex;
                     this.imageGalleryActiveUrl = gallery[newIndex - 1].src;
+                    this.zoomLevel = 1;
+            
+                    this.$nextTick(() => {
+                        $('#zoom-slider').slider('value', 1);
+                    });
                 }
-            }" x-init="initGalleries()" @keyup.right.window="imageGalleryNext()" @keyup.left.window="imageGalleryPrev()"
-                class="w-full h-full select-none">
+            }" 
+            x-init="initGalleries()" 
+            @keyup.right.window="imageGalleryNext()" 
+            @keyup.left.window="imageGalleryPrev()"
+            class="w-full h-full select-none">
+            
+            
 
 
                 <section id="events" class="px-4 py-12 md:py-24 mx-auto max-w-7xl">
@@ -216,405 +251,220 @@
                 </section>
                 <div class="events mx-auto px-4 md:px-6">
                     <div class="max-w-6xl mx-auto duration-1000 delay-300 opacity-0 select-none ease animate-fade-in-view"
-                        style="translate: none; rotate: none; scale: none; opacity: 1; transform: translate(0px, 0px);">
-                        <ul class="grid grid-cols-2 gap-4 md:gap-5 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5" x-ref="events" data-gallery-type="events">
-                            <li class="relative group">
-                                <img x-on:click="imageGalleryOpen($event, 'events')" src="../images/event1.jpg"
-                                    class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Event photo" data-index="1">
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'events')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-                                <img x-on:click="imageGalleryOpen($event, 'events')" src="../images/event2.jpg"
-                                    class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Event photo" data-index="1">
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'events')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-                                <img x-on:click="imageGalleryOpen($event, 'events')" src="../images/event3.jpg"
-                                    class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Event photo" data-index="1">
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'events')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-                                <img x-on:click="imageGalleryOpen($event, 'events')" src="../images/event4.jpg"
-                                    class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Event photo" data-index="1">
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'events')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-                                <img x-on:click="imageGalleryOpen($event, 'events')" src="../images/event5.jpg"
-                                    class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Event photo" data-index="1">
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'events')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-                                <img x-on:click="imageGalleryOpen($event, 'events')" src="../images/event6.jpg"
-                                    class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Event photo" data-index="1">
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'events')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
+                        style="opacity: 1; transform: translate(0px, 0px);">
+                        
+                        <ul class="grid grid-cols-2 gap-4 md:gap-5 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5" 
+                            x-ref="events" data-gallery-type="events">
+                            
+                            <!-- Repeatable gallery item -->
+                            <template x-for="(image, index) in [
+                                '../images/event1.jpg',
+                                '../images/event2.jpg',
+                                '../images/event3.jpg',
+                                '../images/event4.jpg',
+                                '../images/event5.jpg',
+                                '../images/event6.jpg',
+                                '../images/event7.jpg',
+                                '../images/event8.jpg',
+                                '../images/event9.jpg',
+                                '../images/event10.jpg',
+                            ]" :key="index">
+                                <li class="relative group">
+                                    <img 
+                                        :src="image" 
+                                        :data-index="index" 
+                                        alt="Event photo" 
+                                        class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
+                                        @click="imageGalleryOpen($event, 'events')">
+                
+                                    <button
+                                        @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'events')"
+                                        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
+                                        View
+                                    </button>
+                                </li>
+                            </template>
                         </ul>
                     </div>
                 </div>
 
-                <div class="automotive mx-auto px-6" id="automotive">
-                    <section class="px-4 py-12 md:py-24 mx-auto max-w-7xl">
-                        <div class="w-full mx-auto text-left md:w-11/12 xl:w-9/12 md:text-center">
-                            <h1
-                                class="mb-6 text-4xl font-extrabold leading-none tracking-normal text-gray-900 md:text-6xl md:tracking-tight">
-                                <span
-                                    class="text-5xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[11.25rem] font-protest-revolution text-yellow-300 font-black tracking-wider text-reveal leading-tight text-center">Automotive</span>
-                            </h1>
-                        </div>
+                <section id="automotive" class="px-4 py-12 md:py-24 mx-auto max-w-7xl">
+                    <div class="w-full mx-auto text-center">
+                        <h2 class="mb-6 md:mb-8 font-extrabold leading-none tracking-normal text-gray-900" style="font-size: clamp(1.5rem, 5vw + 1rem, 3rem);">
+                            <span class="font-protest-revolution text-yellow-300 font-black tracking-wider text-reveal leading-tight" style="font-size: clamp(2rem, 7vw + 1rem, 4rem);">Automotive</span>
+                        </h2>
+                    </div>
 
-                    </section>
+                </section>
+
+                <div class="automotive mx-auto px-4 md:px-6">
                     <div class="max-w-6xl mx-auto duration-1000 delay-300 opacity-0 select-none ease animate-fade-in-view"
-                        style="translate: none; rotate: none; scale: none; opacity: 1; transform: translate(0px, 0px);">
-                        <ul class="grid grid-cols-2 gap-4 md:gap-5 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5" x-ref="automotive"
-                            data-gallery-type="automotive">
-
-                            <li class="relative group">
-
-
-                                <img x-on:click="imageGalleryOpen($event, 'automotive')" src="../images/automotive1.jpg"
-                                    class="object-cover w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Automotive photo" data-index="2">
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'automotive')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-
-                            <li class="relative group">
-
-
-                                <img x-on:click="imageGalleryOpen($event, 'automotive')" src="../images/automotive2.jpg"
-                                    class="object-cover w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Automotive photo" data-index="2">
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'automotive')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-
-                            <li class="relative group">
-
-
-                                <img x-on:click="imageGalleryOpen($event, 'automotive')" src="../images/automotive3.jpg"
-                                    class="object-cover w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Automotive photo" data-index="2">
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'automotive')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-
-
-                                <img x-on:click="imageGalleryOpen($event, 'automotive')" src="../images/automotive4.jpg"
-                                    class="object-cover w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Automotive photo" data-index="2">
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'automotive')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-
-
-                                <img x-on:click="imageGalleryOpen($event, 'automotive')" src="../images/automotive5.jpg"
-                                    class="object-cover w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Automotive photo" data-index="2">
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'automotive')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-
-
-                                <img x-on:click="imageGalleryOpen($event, 'automotive')" src="../images/automotive6.jpg"
-                                    class="object-cover w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Automotive photo" data-index="2">
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'automotive')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
+                        style="opacity: 1; transform: translate(0px, 0px);">
+                        
+                        <ul class="grid grid-cols-2 gap-4 md:gap-5 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5" 
+                            x-ref="automotive" data-gallery-type="automotive">
+                            
+                            <template x-for="(image, index) in [
+                                '../images/automotive1.jpg',
+                                '../images/automotive2.jpg',
+                                '../images/automotive3.jpg',
+                                '../images/automotive4.jpg',
+                                '../images/automotive5.jpg',
+                                '../images/automotive6.jpg'
+                            ]" :key="index">
+                                <li class="relative group">
+                                    <img 
+                                        :src="image" 
+                                        :data-index="index" 
+                                        alt="Automotive photo" 
+                                        class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
+                                        @click="imageGalleryOpen($event, 'automotive')">
+                
+                                    <button
+                                        @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'automotive')"
+                                        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
+                                        View
+                                    </button>
+                                </li>
+                            </template>
                         </ul>
                     </div>
                 </div>
+                
+                <section id="nature" class="px-4 py-12 md:py-24 mx-auto max-w-7xl">
+                    <div class="w-full mx-auto text-center">
+                        <h2 class="mb-6 md:mb-8 font-extrabold leading-none tracking-normal text-gray-900" style="font-size: clamp(1.5rem, 5vw + 1rem, 3rem);">
+                            <span class="font-protest-revolution text-yellow-300 font-black tracking-wider text-reveal leading-tight" style="font-size: clamp(2rem, 7vw + 1rem, 4rem);">Nature</span>
+                        </h2>
+                    </div>
 
-                <div class="nature mx-auto px-6" id="nature">
-                    <section class="px-4 py-12 md:py-24 mx-auto max-w-7xl">
-                        <div class="w-full mx-auto text-left md:w-11/12 xl:w-9/12 md:text-center">
-                            <h1
-                                class="mb-6 text-4xl font-extrabold leading-none tracking-normal text-gray-900 md:text-6xl md:tracking-tight">
-                                <span
-                                    class="font-protest-revolution text-yellow-300 font-black tracking-wider text-reveal leading-tight" style="font-size: clamp(2rem, 7vw + 1rem, 4rem);">Nature</span>
-                            </h2>
-                        </div>
+                </section>
 
-                    </section>
+                <div class="nature mx-auto px-4 md:px-6">
                     <div class="max-w-6xl mx-auto duration-1000 delay-300 opacity-0 select-none ease animate-fade-in-view"
-                        style="translate: none; rotate: none; scale: none; opacity: 1; transform: translate(0px, 0px);">
-                        <ul class="grid grid-cols-2 gap-4 md:gap-5 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5" x-ref="nature" data-gallery-type="nature">
-                            <li class="relative group">
-
-                                <img x-on:click="imageGalleryOpen($event, 'nature')" src="../images/nature1.jpg"
-                                    class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Event photo" data-index="3">
-
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'nature')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-
-                                <img x-on:click="imageGalleryOpen($event, 'nature')" src="../images/nature2.jpg"
-                                    class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Event photo" data-index="3">
-
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'nature')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-
-                                <img x-on:click="imageGalleryOpen($event, 'nature')" src="../images/nature3.jpg"
-                                    class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Event photo" data-index="3">
-
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'nature')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-
-                                <img x-on:click="imageGalleryOpen($event, 'nature')" src="../images/nature4.jpg"
-                                    class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Event photo" data-index="3">
-
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'nature')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-
-                                <img x-on:click="imageGalleryOpen($event, 'nature')" src="../images/nature5.jpg"
-                                    class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Event photo" data-index="3">
-
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'nature')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-
-                                <img x-on:click="imageGalleryOpen($event, 'nature')" src="../images/nature6.jpg"
-                                    class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Event photo" data-index="3">
-
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'nature')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-
-                                <img x-on:click="imageGalleryOpen($event, 'nature')" src="../images/nature7.jpg"
-                                    class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Event photo" data-index="3">
-
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'nature')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-
-                                <img x-on:click="imageGalleryOpen($event, 'nature')" src="../images/nature8.jpg"
-                                    class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Event photo" data-index="3">
-
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'nature')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-
-                                <img x-on:click="imageGalleryOpen($event, 'nature')" src="../images/nature9.jpg"
-                                    class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Event photo" data-index="3">
-
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'nature')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-                                <img x-on:click="imageGalleryOpen($event, 'nature')" src="../images/nature10.jpg"
-                                    class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="Event photo" data-index="3">
-
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'nature')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
+                        style="opacity: 1; transform: translate(0px, 0px);">
+                        
+                        <ul class="grid grid-cols-2 gap-4 md:gap-5 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5" 
+                            x-ref="nature" data-gallery-type="nature">
+                            
+                            <template x-for="(image, index) in [
+                                '../images/nature1.jpg',
+                                '../images/nature2.jpg',
+                                '../images/nature3.jpg',
+                                '../images/nature4.jpg',
+                                '../images/nature5.jpg',
+                                '../images/nature6.jpg',
+                                '../images/nature7.jpg',
+                                '../images/nature8.jpg',
+                                '../images/nature9.jpg',
+                                '../images/nature10.jpg'
+                            ]" :key="index">
+                                <li class="relative group">
+                                    <img 
+                                        :src="image" 
+                                        :data-index="index" 
+                                        alt="Nature photo" 
+                                        class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
+                                        @click="imageGalleryOpen($event, 'nature')">
+                
+                                    <button
+                                        @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'nature')"
+                                        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
+                                        View
+                                    </button>
+                                </li>
+                            </template>
                         </ul>
                     </div>
                 </div>
-                <div class="hobbies mx-auto px-6" id="hobbies">
-                    <section class="px-4 py-12 md:py-24 mx-auto max-w-7xl">
-                        <div class="w-full mx-auto text-left md:w-11/12 xl:w-9/12 md:text-center">
-                            <h1
-                                class="mb-6 text-4xl font-extrabold leading-none tracking-normal text-gray-900 md:text-6xl md:tracking-tight">
-                                <span
-                                    class="font-protest-revolution text-yellow-300 font-black tracking-wider text-reveal leading-tight" style="font-size: clamp(2rem, 7vw + 1rem, 4rem);">Hobbies</span>
-                            </h2>
-                        </div>
+                
+                <section id="hobbies" class="px-4 py-12 md:py-24 mx-auto max-w-7xl">
+                    <div class="w-full mx-auto text-center">
+                        <h2 class="mb-6 md:mb-8 font-extrabold leading-none tracking-normal text-gray-900" style="font-size: clamp(1.5rem, 5vw + 1rem, 3rem);">
+                            <span class="font-protest-revolution text-yellow-300 font-black tracking-wider text-reveal leading-tight" style="font-size: clamp(2rem, 7vw + 1rem, 4rem);">Hobbies</span>
+                        </h2>
+                    </div>
 
-                    </section>
+                </section>
+
+                <div class="hobbies mx-auto px-4 md:px-6">
                     <div class="max-w-6xl mx-auto duration-1000 delay-300 opacity-0 select-none ease animate-fade-in-view"
-                        style="translate: none; rotate: none; scale: none; opacity: 1; transform: translate(0px, 0px);">
-                        <ul class="grid grid-cols-2 gap-4 md:gap-5 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5" x-ref="hobbies" data-gallery-type="hobbies">
-
-                            <li class="relative group">
-                                <img x-on:click="imageGalleryOpen($event, 'hobbies')" src="../images/hobbies1.jpg"
-                                    class="object-cover w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="hobbies photo" data-index="4">
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'hobbies')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-
-                            <li class="relative group">
-
-
-                                <img x-on:click="imageGalleryOpen($event, 'hobbies')" src="../images/hobbies2.jpg"
-                                    class="object-cover w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="hobbies photo" data-index="4">
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'hobbies')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-
-                            <li class="relative group">
-
-
-                                <img x-on:click="imageGalleryOpen($event, 'hobbies')" src="../images/hobbies3.jpg"
-                                    class="object-cover w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="hobbies photo" data-index="4">
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'hobbies')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-
-
-                                <img x-on:click="imageGalleryOpen($event, 'hobbies')" src="../images/hobbies4.jpg"
-                                    class="object-cover w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="hobbies photo" data-index="4">
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'hobbies')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
-                            <li class="relative group">
-
-
-                                <img x-on:click="imageGalleryOpen($event, 'hobbies')" src="../images/hobbies5.jpg"
-                                    class="object-cover w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
-                                    alt="hobbies photo" data-index="4">
-                                <button
-                                    @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'hobbies')"
-                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
-                                    View
-                                </button>
-                            </li>
+                        style="opacity: 1; transform: translate(0px, 0px);">
+                        
+                        <ul class="grid grid-cols-2 gap-4 md:gap-5 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5" 
+                            x-ref="hobbies" data-gallery-type="hobbies">
+                            
+                            <template x-for="(image, index) in [
+                                '../images/hobbies1.jpg',
+                                '../images/hobbies2.jpg',
+                                '../images/hobbies3.jpg',
+                                '../images/hobbies4.jpg',
+                                '../images/hobbies5.jpg'
+                            ]" :key="index">
+                                <li class="relative group">
+                                    <img 
+                                        :src="image" 
+                                        :data-index="index" 
+                                        alt="Hobby photo" 
+                                        class="object-cover select-none w-full h-auto bg-gray-200 rounded cursor-zoom-in aspect-square md:aspect-[5/6] lg:aspect-[2/3] xl:aspect-[3/4] transition-all"
+                                        @click="imageGalleryOpen($event, 'hobbies')">
+                
+                                    <button
+                                        @click="$event.stopPropagation(); const img = $event.target.closest('li').querySelector('img'); imageGalleryOpen({target: img}, 'hobbies')"
+                                        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white/90 text-gray-800 px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 cursor-pointer shadow-md">
+                                        View
+                                    </button>
+                                </li>
+                            </template>
                         </ul>
                     </div>
                 </div>
+                
 
                 <template x-teleport="body">
-                    <div x-show="imageGalleryOpened" x-transition:enter="transition ease-in-out duration-300"
-                        x-transition:enter-start="opacity-0" x-transition:leave="transition ease-in-in duration-300"
-                        x-transition:leave-end="opacity-0" @click="imageGalleryClose"
-                        @keydown.window.escape="imageGalleryClose" x-trap.inert.noscroll="imageGalleryOpened"
+                    <div x-show="imageGalleryOpened" 
+                        x-transition:enter="transition ease-in-out duration-300"
+                        x-transition:enter-start="opacity-0" 
+                        x-transition:leave="transition ease-in-in duration-300"
+                        x-transition:leave-end="opacity-0" 
+                        @click="imageGalleryClose"
+                        @keydown.window.escape="imageGalleryClose" 
+                        x-trap.inert.noscroll="imageGalleryOpened"
                         class="fixed inset-0 z-[99] flex items-center justify-center bg-black bg-opacity-50 select-none cursor-zoom-out"
                         x-cloak>
-                        <div class="relative flex items-center justify-center w-11/12 xl:w-4/5 h-11/12">
+                
+                        <div class="relative flex flex-col items-center justify-center w-11/12 xl:w-4/5 h-11/12 space-y-4">
+                
+                            <!-- Previous Button -->
                             <div @click.stop="imageGalleryPrev()"
-                                class="absolute left-0 flex items-center justify-center text-white translate-x-10 rounded-full cursor-pointer xl:-translate-x-24 2xl:-translate-x-32 bg-white/10 w-14 h-14 hover:bg-white/20">
+                                class="absolute left-0 top-1/2 transform -translate-y-1/2 text-white translate-x-10 rounded-full cursor-pointer xl:-translate-x-24 2xl:-translate-x-32 bg-white/10 w-14 h-14 flex items-center justify-center hover:bg-white/20">
                                 <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M15.75 19.5L8.25 12l7.5-7.5" />
                                 </svg>
                             </div>
-                            <img x-show="imageGalleryOpened" x-transition:enter="transition ease-in-out duration-300"
+                
+                            <!-- Zoomable Image -->
+                            <img x-show="imageGalleryOpened" 
+                                x-transition:enter="transition ease-in-out duration-300"
                                 x-transition:enter-start="opacity-0 transform scale-50"
                                 x-transition:leave="transition ease-in-in duration-300"
                                 x-transition:leave-end="opacity-0 transform scale-50"
-                                class="object-contain object-center w-full h-full select-none cursor-zoom-out"
-                                :src="imageGalleryActiveUrl" alt="">
+                                class="object-contain object-center w-full h-full max-h-[80vh] select-none cursor-zoom-out transition-transform duration-200"
+                                :style="'transform: scale(' + zoomLevel + ');'"
+                                :src="imageGalleryActiveUrl" 
+                                alt="">
+                
+                            <!-- Zoom Slider -->
+                            <div class="w-64 bg-white rounded shadow p-2" @click.stop>
+                                <label class="block text-sm text-gray-800 mb-1">Zoom:</label>
+                                <div id="zoom-slider"></div>
+                            </div>
+                
+                            <!-- Next Button -->
                             <div @click.stop="imageGalleryNext()"
-                                class="absolute right-0 flex items-center justify-center text-white -translate-x-10 rounded-full cursor-pointer xl:translate-x-24 2xl:translate-x-32 bg-white/10 w-14 h-14 hover:bg-white/20">
+                                class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white -translate-x-10 rounded-full cursor-pointer xl:translate-x-24 2xl:translate-x-32 bg-white/10 w-14 h-14 flex items-center justify-center hover:bg-white/20">
                                 <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -624,6 +474,7 @@
                         </div>
                     </div>
                 </template>
+                
                 </div>
 
             </section>
@@ -638,13 +489,13 @@
                     <p>&copy; 2025 RUNMAR SARDUA. All rights reserved.</p>
                 </div>
                 <div class="flex space-x-6">
-                    <a href="#" class="text-yellow-300 hover:text-yellow-400 transition-colors text-xl">
+                    <a href="https://www.youtube.com/@runmarvisuals" class="text-yellow-300 hover:text-yellow-400 transition-colors text-xl">
                         <i class="fab fa-youtube"></i>
                     </a>
-                    <a href="#" class="text-yellow-300 hover:text-yellow-400 transition-colors text-xl">
+                    <a href="https://www.instagram.com/runmar_visuals/" class="text-yellow-300 hover:text-yellow-400 transition-colors text-xl">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="#" class="text-yellow-300 hover:text-yellow-400 transition-colors text-xl">
+                    <a href="https://www.tiktok.com/@runmarvisuals?lang=en" class="text-yellow-300 hover:text-yellow-400 transition-colors text-xl">
                         <i class="fab fa-tiktok"></i>
                     </a>
                 </div>
